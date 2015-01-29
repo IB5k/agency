@@ -103,12 +103,11 @@
     coll
     (mapcat flatten-vals (vals coll))))
 
-(defn add-deps [& korks]
+(defn build-deps [& korks]
   (->> korks
        (mapv (comp (partial get-in deps) make-korks))
        (mapcat flatten-vals)
-       (into [])
-       (partial (comp vec concat))))
+       (into [])))
 
 (deftask package
   "set environment for a package"
@@ -119,8 +118,7 @@
     (bootlaces! version)
     (-> package
         (select-keys [:source-paths :asset-paths :resource-paths])
-        (->> (map-vals (partial partial into)))
-        (assoc :dependencies (apply add-deps (:dependencies package)))
+        (assoc :dependencies (apply build-deps (:dependencies package)))
         (->> (mapcat identity)
              (apply set-env!)))))
 
