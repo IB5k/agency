@@ -4,6 +4,8 @@
 
 (set-env!
  :source-paths #{}
+ :repositories #(conj % ["my.datomic.com" {:url "https://my.datomic.com/repo"
+                                           :creds :gpg}])
  :dependencies (->> '[[adzerk/bootlaces "0.1.9"]
                       [adzerk/boot-cljs "0.0-2727-0"]
                       [adzerk/boot-cljs-repl "0.1.8"]
@@ -28,7 +30,6 @@
 
 (def deps '{:auth          [[com.cemerick/friend "0.2.1" :exclusions [org.clojure/core.cache]]]
             :async         [[org.clojure/core.async "0.1.346.0-17112a-alpha"]]
-            :bidi          [[juxt.modular/bidi "0.5.4"]]
             :clojure       [[org.clojure/clojure "1.7.0-alpha5"]]
             :clojurescript [[org.clojure/clojurescript "0.0-2740"]]
             :component
@@ -56,9 +57,11 @@
             :om            [[om "0.8.0"]
                             [prismatic/om-tools "0.3.10" :exclusions [org.clojure/clojure]]
                             [sablono "0.3.1" :exclusions [com.facebook/react]]]
-            :server        [[ring "1.3.2"]
-                            [ring/ring-defaults "0.1.2"]
-                            [juxt.modular/http-kit "0.5.1"]]
+            :server
+            {:bidi         [[juxt.modular/bidi "0.5.4"]]
+             :http-kit     [[juxt.modular/http-kit "0.5.1"]]
+             :ring         [[ring "1.3.2"]
+                            [ring/ring-defaults "0.1.2"]]}
             :rum           [[rum "0.2.1"]]
             :reader        [[org.clojure/tools.reader "0.8.9"]]
             :sente         [[com.taoensso/encore "1.16.2"]
@@ -72,6 +75,22 @@
             :utils         [[me.raynes/fs "1.4.6"]
                             [prismatic/plumbing "0.3.7"]
                             [prismatic/schema "0.3.4"]]})
+
+(def packages {:async {:project 'agency/async
+                       :version "0.1.0-SNAPSHOT"
+                       :description "async helpers"
+                       :source-paths #{"src/async"}
+                       :dependencies [:clojure :clojurescript :async]}
+               :chsk {:project 'agency/chsk
+                      :version "0.1.0-SNAPSHOT"
+                      :description "websockets over channels using sente"
+                      :source-paths #{"src/chsk"}
+                      :dependencies [:clojure :clojurescript :async]}
+               :datomic {:project 'agency/datomic
+                         :version "0.1.0-SNAPSHOT"
+                         :description "datomic lifecycle components"
+                         :source-paths #{"src/datomic"}
+                         :dependencies [:clojure :datomic :utils]}})
 
 (defn make-korks [korks]
   (cond-> korks
@@ -91,10 +110,19 @@
        (into [])
        (partial (comp vec concat))))
 
-(defn set-package! [{:keys [project version description] :as package}]
-  (task-options!
-   pom (select-keys [:project :version] package))
-  (bootlaces! version))
+(deftask package
+  "set environment for a package"
+  [p package-id  KEYWORD kw "The id of the component"]
+  (let [{:keys [version] :as package} (get packages package-id)]
+    (task-options!
+     pom (select-keys [:project :version] package))
+    (bootlaces! version)
+    (-> package
+        (select-keys [:source-paths :asset-paths :resource-paths])
+        (->> (map-vals (partial partial into)))
+        (assoc :dependencies (apply add-deps (:dependencies package)))
+        (->> (mapcat identity)
+             (apply set-env!)))))
 
 (deftask dev
   "watch and compile cljx, cljs, with cljs repl"
@@ -106,14 +134,3 @@
    (cljs-repl)
    (cljs :optimizations :none
          :pretty-print true)))
-
-(deftask datomic
-  "datomic environment"
-  []
-  (set-package!
-   {:project 'agency/datomic
-    :version "0.1.0-SNAPSHOT"
-    :description "datomic components"})
-  (set-env!
-   :source-paths #(conj % "src/datomic")
-   :dependencies (add-deps :clojure :datomic :utils)))
