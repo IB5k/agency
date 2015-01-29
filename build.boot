@@ -95,6 +95,7 @@
   (task-options!
    pom (select-keys [:project :version] package))
   (bootlaces! version))
+
 (deftask dev
   "watch and compile cljx, cljs, with cljs repl"
   []
@@ -105,3 +106,14 @@
    (cljs-repl)
    (cljs :optimizations :none
          :pretty-print true)))
+
+(deftask datomic
+  "datomic environment"
+  []
+  (set-package!
+   {:project 'agency/datomic
+    :version "0.1.0-SNAPSHOT"
+    :description "datomic components"})
+  (set-env!
+   :source-paths #(conj % "src/datomic")
+   :dependencies (add-deps :clojure :datomic :utils)))
