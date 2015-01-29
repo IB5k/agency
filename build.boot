@@ -95,3 +95,13 @@
   (task-options!
    pom (select-keys [:project :version] package))
   (bootlaces! version))
+(deftask dev
+  "watch and compile cljx, cljs, with cljs repl"
+  []
+  (comp
+   (watch)
+   (notify)
+   (cljx)
+   (cljs-repl)
+   (cljs :optimizations :none
+         :pretty-print true)))
