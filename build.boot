@@ -73,3 +73,25 @@
                             [prismatic/plumbing "0.3.7"]
                             [prismatic/schema "0.3.4"]]})
 
+(defn make-korks [korks]
+  (cond-> korks
+          (keyword? korks) vector))
+
+(defn flatten-vals
+  "takes a hashmap and recursively returns a flattened list of all the values"
+  [coll]
+  (if ((every-pred coll? sequential?) coll)
+    coll
+    (mapcat flatten-vals (vals coll))))
+
+(defn add-deps [& korks]
+  (->> korks
+       (mapv (comp (partial get-in deps) make-korks))
+       (mapcat flatten-vals)
+       (into [])
+       (partial (comp vec concat))))
+
+(defn set-package! [{:keys [project version description] :as package}]
+  (task-options!
+   pom (select-keys [:project :version] package))
+  (bootlaces! version))
