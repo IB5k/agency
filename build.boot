@@ -28,7 +28,83 @@
       :scm {:url "https://github.com/IB5k/agency"}}
  cljs {:source-map true})
 
-(def deps '{:auth          [[com.cemerick/friend "0.2.1" :exclusions [org.clojure/core.cache]]]
+(def packages {:async      {:project 'agency/async
+                            :version "0.1.0-SNAPSHOT"
+                            :description "async helpers"
+                            :source-paths #{"src/async"}
+                            :dependencies [:clojure
+                                           :clojurescript
+                                           :component
+                                           :schema
+                                           :async]}
+               :chsk       {:project 'agency/chsk
+                            :version "0.1.0-SNAPSHOT"
+                            :description "websockets over channels using sente"
+                            :source-paths #{"src/chsk"}
+                            :dependencies [:clojure
+                                           :clojurescript
+                                           :component
+                                           :schema
+                                           :async
+                                           :sente
+                                           [:agency :async]
+                                           [:modular :bidi]
+                                           [:modular :ring]]}
+               :cljs       {:project 'agency/cljs
+                            :version "0.1.0-SNAPSHOT"
+                            :description "html rendererss for cljs apps"
+                            :source-paths #{"src/cljs"}
+                            :dependencies [:clojure
+                                           [:component :clj]
+                                           :schema]}
+               :datascript {:project 'agency/datascript
+                            :version "0.1.0-SNAPSHOT"
+                            :description "datascript components"
+                            :source-paths #{"src/datascript"}
+                            :dependencies [:clojurescript
+                                           [:component :cljs]
+                                           :schema
+                                           :datascript]}
+               :datomic    {:project 'agency/datomic
+                            :version "0.1.0-SNAPSHOT"
+                            :description "datomic lifecycle components"
+                            :source-paths #{"src/datomic"}
+                            :dependencies [:clojure
+                                           :datomic
+                                           :schema
+                                           [:filesystem :io]]}
+               :om         {:project 'agency/om
+                            :version "0.1.0-SNAPSHOT"
+                            :description "om components"
+                            :source-paths #{"src/om"}
+                            :dependencies [:clojurescript
+                                           :async
+                                           [:component :cljs]
+                                           :schema
+                                           :om]}
+               :persistent {:project 'agency/persistent
+                            :version "0.1.0-SNAPSHOT"
+                            :description "components for persisting data structures to files"
+                            :source-paths #{"src/persistent"}
+                            :dependencies [:clojure
+                                           [:component :clj]
+                                           :schema
+                                           :logging
+                                           [:filesystem :io]]}
+               :watcher    {:project 'agency/watcher
+                            :version "0.1.0-SNAPSHOT"
+                            :description "components for watching filesystems"
+                            :source-paths #{"src/watcer"}
+                            :dependencies [:clojure
+                                           :async
+                                           [:component :clj]
+                                           :schema
+                                           :filesystem]}})
+
+(def deps '{:agency (map-vals (fnk [project version]
+                                [[project version]])
+                              packages)
+            :auth          [[com.cemerick/friend "0.2.1" :exclusions [org.clojure/core.cache]]]
             :async         [[org.clojure/core.async "0.1.346.0-17112a-alpha"]]
             :clojure       [[org.clojure/clojure "1.7.0-alpha5"]]
             :clojurescript [[org.clojure/clojurescript "0.0-2740"]]
@@ -45,23 +121,32 @@
               :console     [[shodan "0.4.1"]]}
              :cljs         [[prone "0.6.1"]
                             [org.clojure/tools.namespace "0.2.7"]]}
+            :filesystem
+            {:io           [[me.raynes/fs "1.4.6"]]
+             :watch        [[clojure-watch "0.1.10"]]}
             :garden        [[garden "1.2.5"]
                             [trowel "0.1.0-SNAPSHOT"]]
+            :html          [[hiccup "1.0.5"]]
             :http-requests
             {:clj          [[clj-http "1.0.1"]]
              :cljs         [[cljs-http "0.1.20"]]}
+            :interpolation [[bardo "0.1.0"]]
             :logging       [[com.taoensso/timbre "3.3.1"]
                             [org.clojure/tools.logging "0.2.6"]]
-            :modular       [[juxt.modular/maker "0.5.0"]
+            :modular
+            {:bidi         [[juxt.modular/bidi "0.5.4"]]
+             :http-kit     [[juxt.modular/http-kit "0.5.1"]]
+             :maker        [[juxt.modular/maker "0.5.0"]
                             [juxt.modular/wire-up "0.5.0"]]
-            :om            [[om "0.8.0"]
+             :ring         [[juxt.modular/ring "0.5.2"]]}
+            :om            [[om "0.8.7"]
                             [prismatic/om-tools "0.3.10" :exclusions [org.clojure/clojure]]
                             [sablono "0.3.1" :exclusions [com.facebook/react]]]
             :server
-            {:bidi         [[juxt.modular/bidi "0.5.4"]]
-             :http-kit     [[juxt.modular/http-kit "0.5.1"]]
-             :ring         [[ring "1.3.2"]
+            {:ring         [[ring "1.3.2"]
                             [ring/ring-defaults "0.1.2"]]}
+            :schema        [[prismatic/plumbing "0.3.7"]
+                            [prismatic/schema "0.3.4"]]
             :rum           [[rum "0.2.1"]]
             :reader        [[org.clojure/tools.reader "0.8.9"]]
             :sente         [[com.taoensso/encore "1.16.2"]
@@ -71,26 +156,7 @@
                             [juxt.modular/web-template "0.5.2"]]
             :time
             {:clj          [[clj-time "0.8.0"]]
-             :cljs         [[com.andrewmcveigh/cljs-time "0.2.4"]]}
-            :utils         [[me.raynes/fs "1.4.6"]
-                            [prismatic/plumbing "0.3.7"]
-                            [prismatic/schema "0.3.4"]]})
-
-(def packages {:async {:project 'agency/async
-                       :version "0.1.0-SNAPSHOT"
-                       :description "async helpers"
-                       :source-paths #{"src/async"}
-                       :dependencies [:clojure :clojurescript :async]}
-               :chsk {:project 'agency/chsk
-                      :version "0.1.0-SNAPSHOT"
-                      :description "websockets over channels using sente"
-                      :source-paths #{"src/chsk"}
-                      :dependencies [:clojure :clojurescript :async]}
-               :datomic {:project 'agency/datomic
-                         :version "0.1.0-SNAPSHOT"
-                         :description "datomic lifecycle components"
-                         :source-paths #{"src/datomic"}
-                         :dependencies [:clojure :datomic :utils]}})
+             :cljs         [[com.andrewmcveigh/cljs-time "0.2.4"]]}})
 
 (defn make-korks [korks]
   (cond-> korks
