@@ -3,7 +3,6 @@
   (:require
    [clojure.core.async :as async :refer (go go-loop <! >! put! chan dropping-buffer alts!)]
    [clojure.test :refer (function?)]
-   [clojure.tools.logging :as log]
    [com.stuartsierra.component :as component]
    [modular.ring :refer (WebRequestHandler)]
    [modular.bidi :refer (WebService as-request-handler)]
@@ -16,7 +15,7 @@
    [cljs.core.async.macros :refer [go go-loop]])
   #+cljs
   (:require
-   [cljs.core.async :as async :refer (<! >! put! chan dropping-buffer)]
+   [cljs.core.async :as async :refer (<! >! put! chan dropping-buffer close!)]
    [plumbing.core :refer-macros [defnk fnk <-]]
    [schema.core :as s]
    [taoensso.sente  :as sente]
@@ -86,8 +85,10 @@
         :ch-chsk ch-recv
         :chsk-send! #(put! send-queue %)
         :chsk-state state
+        :control-chan control-chan
         :router (atom (sente/start-chsk-router! ch-recv chsk-handler)))))
   (stop [this]
+    (some-> this :control-chan close!)
     this))
 
 #+clj
