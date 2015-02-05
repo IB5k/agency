@@ -83,10 +83,10 @@
             {:clj          [[clj-time "0.8.0"]]
              :cljs         [[com.andrewmcveigh/cljs-time "0.2.4"]]}})
 
-(def packages {:async      {:project 'agency/async
+(def modules {:async      {:project 'agency/async
                             :version "0.1.0-SNAPSHOT"
                             :description "async helpers"
-                            :source-paths #{"packages/async/src"}
+                            :source-paths #{"modules/async/src"}
                             :dependencies [:clojure
                                            :clojurescript
                                            :component
@@ -95,7 +95,7 @@
                :chsk       {:project 'agency/chsk
                             :version "0.1.0-SNAPSHOT"
                             :description "websockets over channels using sente"
-                            :source-paths #{"packages/chsk/src"}
+                            :source-paths #{"modules/chsk/src"}
                             :dependencies [:clojure
                                            :clojurescript
                                            :component
@@ -108,14 +108,14 @@
                :cljs       {:project 'agency/cljs
                             :version "0.1.0-SNAPSHOT"
                             :description "html rendererss for cljs apps"
-                            :source-paths #{"packages/cljs/src"}
+                            :source-paths #{"modules/cljs/src"}
                             :dependencies [:clojure
                                            [:component :clj]
                                            :schema]}
                :datascript {:project 'agency/datascript
                             :version "0.1.0-SNAPSHOT"
                             :description "datascript components"
-                            :source-paths #{"packages/datascript/src"}
+                            :source-paths #{"modules/datascript/src"}
                             :dependencies [:clojurescript
                                            [:component :cljs]
                                            :schema
@@ -123,7 +123,7 @@
                :datomic    {:project 'agency/datomic
                             :version "0.1.0-SNAPSHOT"
                             :description "datomic lifecycle components"
-                            :source-paths #{"packages/datomic/src"}
+                            :source-paths #{"modules/datomic/src"}
                             :dependencies [:clojure
                                            :datomic
                                            :schema
@@ -131,7 +131,7 @@
                :om         {:project 'agency/om
                             :version "0.1.0-SNAPSHOT"
                             :description "om components"
-                            :source-paths #{"packages/om"}
+                            :source-paths #{"modules/om"}
                             :dependencies [:clojurescript
                                            :async
                                            [:component :cljs]
@@ -140,7 +140,7 @@
                :persistent {:project 'agency/persistent
                             :version "0.1.0-SNAPSHOT"
                             :description "components for persisting data structures to files"
-                            :source-paths #{"packages/persistent/src"}
+                            :source-paths #{"modules/persistent/src"}
                             :dependencies [:clojure
                                            [:component :clj]
                                            :schema
@@ -149,7 +149,7 @@
                :watcher    {:project 'agency/watcher
                             :version "0.1.0-SNAPSHOT"
                             :description "components for watching filesystems"
-                            :source-paths #{"packages/watcher/src"}
+                            :source-paths #{"modules/watcher/src"}
                             :dependencies [:clojure
                                            :async
                                            [:component :clj]
@@ -159,12 +159,12 @@
 (def environment {:deps (assoc deps
                           :agency (map-vals (fnk [project version]
                                               [[project version]])
-                                            packages))
-                  :packages (assoc packages
+                                            modules))
+                  :modules (assoc modules
                               :examples {:project 'agency/examples
                                          :version "0.1.0-SNAPSHOT"
                                          :description "agency examples"
-                                         :source-paths (reduce into (map :source-paths (vals packages)))
+                                         :source-paths (reduce into (map :source-paths (vals modules)))
                                          :dependencies (into [] (keys deps))})})
 
 (defn make-korks [korks]
@@ -184,14 +184,14 @@
        (mapcat flatten-vals)
        (into [])))
 
-(deftask package
-  "set environment for a package"
-  [p id  KEYWORD kw "The id of the component"]
-  (let [{:keys [deps packages]} environment
-        {:keys [version] :as package} (get packages id)]
+(deftask module
+  "set environment for a module"
+  [m id  KEYWORD kw "The id of the component"]
+  (let [{:keys [deps modules]} environment
+        {:keys [version] :as module} (get modules id)]
     (task-options!
-     pom (select-keys [:project :version] package))
-    (-> package
+     pom (select-keys [:project :version] module))
+    (-> module
         (select-keys [:source-paths :asset-paths :resource-paths :dependencies])
         (update :dependencies (fn->> (apply (partial build-deps deps))
                                      (concat dev-deps)
@@ -207,6 +207,6 @@
    (watch)
    (notify)
    (cljx)
-   (cljs-repl)
+   ;; (cljs-repl)
    (cljs :optimizations :none
          :pretty-print true)))
