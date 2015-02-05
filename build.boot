@@ -32,7 +32,7 @@
 (def deps '{:auth          [[com.cemerick/friend "0.2.1" :exclusions [org.clojure/core.cache]]]
             :async         [[org.clojure/core.async "0.1.346.0-17112a-alpha"]]
             :clojure       [[org.clojure/clojure "1.7.0-alpha5"]]
-            :clojurescript [[org.clojure/clojurescript "0.0-2740"]]
+            :clojurescript [[org.clojure/clojurescript "0.0-2760"]]
             :component
             {:clj          [[com.stuartsierra/component "0.2.2"]]
              :cljs         [[quile/component-cljs "0.2.2"]]}
@@ -190,7 +190,7 @@
   (let [{:keys [deps modules]} environment
         {:keys [version] :as module} (get modules id)]
     (task-options!
-     pom (select-keys [:project :version] module))
+     pom (select-keys module [:project :version]))
     (-> module
         (select-keys [:source-paths :asset-paths :resource-paths :dependencies])
         (update :dependencies (fn->> (apply (partial build-deps deps))
