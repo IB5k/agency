@@ -64,7 +64,7 @@
              :maker        [[juxt.modular/maker "0.5.0"]
                             [juxt.modular/wire-up "0.5.0"]]
              :ring         [[juxt.modular/ring "0.5.2"]]}
-            :om            [[om "0.8.7"]
+            :om            [[org.omcljs/om "0.8.8"]
                             [prismatic/om-tools "0.3.10" :exclusions [org.clojure/clojure]]
                             [sablono "0.3.1" :exclusions [com.facebook/react]]]
             :server
@@ -131,7 +131,7 @@
                :om         {:project 'agency/om
                             :version "0.1.0-SNAPSHOT"
                             :description "om components"
-                            :source-paths #{"modules/om"}
+                            :source-paths #{"modules/om/src"}
                             :dependencies [:clojurescript
                                            :async
                                            [:component :cljs]
