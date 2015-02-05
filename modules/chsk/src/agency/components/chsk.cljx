@@ -8,8 +8,7 @@
    [modular.bidi :refer (WebService as-request-handler)]
    [plumbing.core :refer :all :exclude [update]]
    [schema.core :as s]
-   [taoensso.sente :as sente]
-   [agency.utils.async :refer [control-loop]])
+   [taoensso.sente :as sente])
   #+cljs
   (:require-macros
    [cljs.core.async.macros :refer [go go-loop]])
@@ -19,7 +18,8 @@
    [plumbing.core :refer-macros [defnk fnk <-]]
    [schema.core :as s]
    [taoensso.sente  :as sente]
-   [quile.component :as component]))
+   [quile.component :as component]
+   [agency.utils.async :refer [control-loop]]))
 
 #+clj
 (defn uuid [] (str (java.util.UUID/randomUUID)))
