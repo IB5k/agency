@@ -1,4 +1,4 @@
-(ns agency.components.watcher
+(ns ib5k.components.watcher
   (:require
    [clojure.java.io :as io]
    [clojure.java.shell :refer [sh]]

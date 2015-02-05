@@ -1,7 +1,7 @@
 (task-options!
  pom {:license {"Eclipse Public License" "http://www.eclipse.org/legal/epl-v10.html"}
-      :url "https://github.com/pleasetrythisathome/agency"
-      :scm {:url "https://github.com/pleasetrythisathome/agency"}})
+      :url "https://github.com/ib5k/agency"
+      :scm {:url "https://github.com/ib5k/agency"}})
 
 (def dev-deps (->> '[[adzerk/bootlaces "0.1.10"]
                      [adzerk/boot-cljs "0.0-2727-0"]
@@ -83,7 +83,7 @@
             {:clj          [[clj-time "0.8.0"]]
              :cljs         [[com.andrewmcveigh/cljs-time "0.2.4"]]}})
 
-(def modules {:async      {:project 'agency/async
+(def modules {:async      {:project 'ib5k/async
                             :version "0.1.0-SNAPSHOT"
                             :description "async helpers"
                             :source-paths #{"modules/async/src"}
@@ -92,7 +92,7 @@
                                            :component
                                            :schema
                                            :async]}
-               :chsk       {:project 'agency/chsk
+               :chsk       {:project 'ib5k/chsk
                             :version "0.1.0-SNAPSHOT"
                             :description "websockets over channels using sente"
                             :source-paths #{"modules/chsk/src"}
@@ -102,17 +102,17 @@
                                            :schema
                                            :async
                                            :sente
-                                           [:agency :async]
+                                           [:ib5k :async]
                                            [:modular :bidi]
                                            [:modular :ring]]}
-               :cljs       {:project 'agency/cljs
+               :cljs       {:project 'ib5k/cljs
                             :version "0.1.0-SNAPSHOT"
                             :description "html rendererss for cljs apps"
                             :source-paths #{"modules/cljs/src"}
                             :dependencies [:clojure
                                            [:component :clj]
                                            :schema]}
-               :datascript {:project 'agency/datascript
+               :datascript {:project 'ib5k/datascript
                             :version "0.1.0-SNAPSHOT"
                             :description "datascript components"
                             :source-paths #{"modules/datascript/src"}
@@ -120,7 +120,7 @@
                                            [:component :cljs]
                                            :schema
                                            :datascript]}
-               :datomic    {:project 'agency/datomic
+               :datomic    {:project 'ib5k/datomic
                             :version "0.1.0-SNAPSHOT"
                             :description "datomic lifecycle components"
                             :source-paths #{"modules/datomic/src"}
@@ -128,7 +128,7 @@
                                            :datomic
                                            :schema
                                            [:filesystem :io]]}
-               :om         {:project 'agency/om
+               :om         {:project 'ib5k/om
                             :version "0.1.0-SNAPSHOT"
                             :description "om components"
                             :source-paths #{"modules/om/src"}
@@ -137,7 +137,7 @@
                                            [:component :cljs]
                                            :schema
                                            :om]}
-               :persistent {:project 'agency/persistent
+               :persistent {:project 'ib5k/persistent
                             :version "0.1.0-SNAPSHOT"
                             :description "components for persisting data structures to files"
                             :source-paths #{"modules/persistent/src"}
@@ -146,7 +146,7 @@
                                            :schema
                                            :logging
                                            [:filesystem :io]]}
-               :watcher    {:project 'agency/watcher
+               :watcher    {:project 'ib5k/watcher
                             :version "0.1.0-SNAPSHOT"
                             :description "components for watching filesystems"
                             :source-paths #{"modules/watcher/src"}
@@ -157,13 +157,13 @@
                                            :filesystem]}})
 
 (def environment {:deps (assoc deps
-                          :agency (map-vals (fnk [project version]
+                          :ib5k (map-vals (fnk [project version]
                                               [[project version]])
                                             modules))
                   :modules (assoc modules
-                              :examples {:project 'agency/examples
+                              :examples {:project 'ib5k/examples
                                          :version "0.1.0-SNAPSHOT"
-                                         :description "agency examples"
+                                         :description "ib5k examples"
                                          :source-paths (reduce into (map :source-paths (vals modules)))
                                          :dependencies (into [] (keys deps))})})
 
@@ -208,5 +208,6 @@
    (notify)
    (cljx)
    ;; (cljs-repl)
+   (repl :server true)
    (cljs :optimizations :none
          :pretty-print true)))

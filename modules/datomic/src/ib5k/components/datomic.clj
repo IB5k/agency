@@ -1,4 +1,4 @@
-(ns agency.components.datomic
+(ns ib5k.components.datomic
   (:require
    [clojure.tools.logging :as log]
    [plumbing.core :refer :all :exclude [update]]

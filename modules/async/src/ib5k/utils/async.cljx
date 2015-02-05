@@ -1,4 +1,4 @@
-(ns agency.utils.async
+(ns ib5k.utils.async
   #+cljs
   (:require-macros
    [cljs.core.async.macros :refer [go go-loop]])

@@ -1,11 +1,11 @@
-(ns agency.components.html
+(ns ib5k.components.html
   (:require
    [clojure.java.io :as io]
    [com.stuartsierra.component :as component]
    [hiccup.page :refer [html5 include-css include-js]]
    [plumbing.core :refer :all :exclude [update]]
    [schema.core :as s]
-   [agency.components.cljs-render :refer (CljsRenderer render)]))
+   [ib5k.components.cljs-render :refer (CljsRenderer render)]))
 
 (defnk head
   [title

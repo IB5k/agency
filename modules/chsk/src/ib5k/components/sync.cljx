@@ -1,4 +1,4 @@
-(ns agency.components.sync
+(ns ib5k.components.sync
   #+cljs
   (:require-macros
    [cljs.core.async.macros :refer [go go-loop]])
@@ -9,7 +9,7 @@
    #+cljs [plumbing.core :refer [] :refer-macros [fnk]]
    #+cljs [cljs.core.async :as async :refer (<! put! sub chan)]
    [schema.core :as s]
-   [agency.components.chsk :refer (ChannelSocketHandler)]))
+   [ib5k.components.chsk :refer (ChannelSocketHandler)]))
 
 #+clj
 (def new-chsk-sync-reference-schema

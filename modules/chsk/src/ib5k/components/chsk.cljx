@@ -1,4 +1,4 @@
-(ns agency.components.chsk
+(ns ib5k.components.chsk
   #+clj
   (:require
    [clojure.core.async :as async :refer (go go-loop <! >! put! chan dropping-buffer alts!)]
@@ -19,7 +19,7 @@
    [schema.core :as s]
    [taoensso.sente  :as sente]
    [quile.component :as component]
-   [agency.utils.async :refer [control-loop]]))
+   [ib5k.utils.async :refer [control-loop]]))
 
 #+clj
 (defn uuid [] (str (java.util.UUID/randomUUID)))

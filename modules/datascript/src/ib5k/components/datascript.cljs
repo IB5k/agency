@@ -1,4 +1,4 @@
-(ns agency.components.datascript
+(ns ib5k.components.datascript
   (:require
    [datascript :as d]
    [plumbing.core :refer-macros [defnk fnk <-]]

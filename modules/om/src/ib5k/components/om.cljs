@@ -1,4 +1,4 @@
-(ns agency.components.om
+(ns ib5k.components.om
   (:require
    [cljs.core.async :as async :refer [put! chan pub]]
    [goog.dom :as gdom]

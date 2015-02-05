@@ -1,4 +1,4 @@
-(ns agency.components.channel
+(ns ib5k.components.channel
   (:require
    #+clj [com.stuartsierra.component :as component]
    #+cljs [quile.component :as component]

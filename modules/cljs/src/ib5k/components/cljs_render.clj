@@ -1,4 +1,4 @@
-(ns agency.components.cljs-render
+(ns ib5k.components.cljs-render
   (:require
    [clojure.java.io :as io]
    [com.stuartsierra.component :as component]
