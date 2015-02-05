@@ -24,8 +24,10 @@
 (def watcher-schema
   {:path s/Str
    :event-types [(s/enum :create :modify :delete)]
-   :output-chan clojure.core.async.impl.channels.ManyToManyChannel
    :options {(s/enum :recursive) s/Bool}})
+
+(def watcher-using-schema
+  {:output-chan clojure.core.async.impl.channels.ManyToManyChannel})
 
 (defrecord Watcher [path event-types options output-chan]
   component/Lifecycle
@@ -63,4 +65,5 @@
                :bootstrap (constantly nil)
                :callback (constantly nil)})
        (s/validate watcher-schema)
-       (map->Watcher)))
+       (map->Watcher)
+       (<- (component/using [:output-chan]))))
