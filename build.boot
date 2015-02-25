@@ -111,7 +111,8 @@
                             :source-paths #{"modules/cljs/src"}
                             :dependencies [:clojure
                                            [:component :clj]
-                                           :schema]}
+                                           :schema
+                                           :html]}
                :datascript {:project 'ib5k/datascript
                             :version "0.1.0-SNAPSHOT"
                             :description "datascript components"
